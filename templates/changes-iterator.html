@@ -1,0 +1,48 @@
+<div class="key-list__block key-list__block--changes">
+    {#                    <div class="fixed">#}
+    {% if d.changes != 'Init' %}
+        <h3 class="key-list__title">Changes: </h3>
+        {{ m_d }}
+        <ul class="keys-list__value list-value list-value--changes">
+            {
+            {% for key, value in d.changes.items() %}
+                <li class="list-value__item">
+                    {% if value is mapping %}
+                        {{ key }}:
+
+                        <ul>
+                            {% for k, v in value.items() %}
+                                <li class="list-value__item">{{ k }}: {{ v }}</li>
+                            {% endfor %}
+                        </ul>
+
+                    {% else %}
+                        {% if value is iterable and not value is mapping %}
+                            {{ key }}:
+                            <ul>
+                                {% for i in range(value|length) %}
+                                    {% if value[i] is mapping %}
+                                        {
+                                        <ul>
+                                            {% for k, v in value[i].items() %}
+                                                <li class="list-value__item">{{ k }}: {{ v }}</li>
+                                            {% endfor %}
+                                        </ul>
+                                        }
+                                        <br>
+                                    {% else %}
+                                        <ul>
+                                            <li class="list-value__item">{{ i }}: {{ value[i] }}</li>
+                                        </ul>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+            }
+        </ul>
+    {% endif %}
+    {#                    </div>#}
+</div>

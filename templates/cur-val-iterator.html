@@ -1,0 +1,47 @@
+<div class="key-list__block">
+    <h3 class="key-list__title">Current value:</h3>
+    <ul class="keys-list__value list-value">
+        {
+        {% for key, value in d.cur_value.items() %}
+            {#                            {% if d.mod_keys and key in d.mod_keys %}list-value__item--changed{% endif %}#}
+            <li class="list-value__item">
+                {% if value is mapping %}
+                    {{ key }}:
+
+                    <ul>
+                        {% for k, v in value.items() %}
+                            <li class="list-value__item">{{ k }}: {{ v }}</li>
+                        {% endfor %}
+                    </ul>
+
+                {% else %}
+                    {% if value is iterable and not value is mapping %}
+                        {{ key }}:
+                        <ul>
+                            {% for i in range(value|length) %}
+                                {% if value[i] is mapping %}
+                                    {{ i }}: {
+                                    <ul>
+                                        {% for k, v in value[i].items() %}
+                                            <li class="list-value__item">{{ k }}: {{ v }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    }
+                                    <br>
+                                {% else %}
+                                    <ul>
+                                        <li class="list-value__item">{{ i }}: {{ value[i] }}</li>
+                                    </ul>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+
+                    {% elif not value is iterable and not value is mapping %}
+                        {{ key }}: {{ value }}
+                    {% endif %}
+                {% endif %}
+            </li>
+        {% endfor %}
+        }
+    </ul>
+</div>

@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <main>
+        <h1 class="title">Consul KV Control</h1>
+
+        <form class="form-filter" action="{{ url_for('index_view') }}" method="post">
+            <h2 class="form-filter__title">Current time: {{ date }}</h2>
+
+
+            {#            <input type="submit" value="Проверить изменения">#}
+        </form>
+
+        <ul class="keys-list">
+            {% if data|length %}
+                <h2>Unresolved changes today: {{ data|length }}</h2>
+
+                {% for d in data %}
+                    <li class="keys-list__item {% if d.checked %}keys-list__item--checked{% endif %}">
+                        <a class="key-list__link full-info-link hover-link"
+                           href="{{ url_for('full_kv_info_view', kv_id=d.id) }}">
+                            Show full info
+                        </a>
+
+                        <h3 class="key-list__title">
+                            Path: <a class="key-list__link hover"
+                                     target="_blank"
+                                     href="http://localhost:8500/ui/dc1/kv/{{ d.path }}/edit">{{ d.path }}</a>
+                        </h3>
+                        <h3 class="key-list__title" style="color: red">Modify keys: {{ d.mod_keys }}</h3>
+                        <h3 class="key-list__title">Date of modify: {{ d.date }}</h3>
+                        <h3 class="key-list__title">Current value:</h3>
+
+                        {% if d.changes != 'Init' %}
+                            <h3 class="key-list__title">Changes: </h3>
+                            <ul class="keys-list__value list-value">
+                                {
+                                {% for key, value in d.changes.items() %}
+                                    <li class="list-value__item {% if d.mod_keys and key in d.mod_keys %}list-value__item--changed{% endif %}">
+                                        {{ key }}: {{ value }}
+                                    </li>
+                                {% endfor %}
+                                }
+                            </ul>
+                        {% endif %}
+
+                        <label for="change-checker">Change checker</label>
+                        <input id="change-checker" type="checkbox" {% if d.checked %}checked="checked"{% endif %}>
+                    </li>
+                {% endfor %}
+
+            {% else %}
+                <h2>No changes today</h2>
+            {% endif %}
+        </ul>
+    </main>
+{% endblock %}

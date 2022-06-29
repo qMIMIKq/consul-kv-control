@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block main %}
+    <main>
+        <div class="keys-list__item keys-list__item--sm p-20 {% if d.checked %}keys-list__item--checked{% endif %}">
+            <h3 class="key-list__title hover">
+                Path: <a class="key-list__link"
+                         target="_blank"
+                         href="http://localhost:8500/ui/dc1/kv/{{ d.path }}/edit">{{ d.path }}</a>
+            </h3>
+            <h3 class="key-list__title" style="color: red">Modify keys: {{ d.mod_keys }}</h3>
+            <h3 class="key-list__title">Date of modify: {{ d.date }}</h3>
+
+            <div class="flex-between">
+                {% include 'prev-val-iterator.html' %}
+
+                {% include 'changes-iterator.html' %}
+
+                {% include 'cur-val-iterator.html' %}
+            </div>
+        </div>
+    </main>
+{% endblock %}

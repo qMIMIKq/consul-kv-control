@@ -113,23 +113,26 @@ def get_changed_values(prev_obj, cur_obj, changes=None, changed_i=None):
 
         for key, value in cur_obj.items():
             if json.dumps(value) != json.dumps(prev_obj[key]):
-                changes.append({
-                    'index': changed_i,
-                    'prev': {
-                        key: prev_obj[key]
-                    },
-                    'cur': {
-                        key: value
-                    }
-                })
-                # changes.append({
-                #     'prev': {
-                #         key: prev_obj[key]
-                #     },
-                #     'cur': {
-                #         key: value
-                #     }
-                # })
+                if changed_i is not None:
+
+                    changes.append({
+                        'index': changed_i,
+                        'prev': {
+                            key: prev_obj[key]
+                        },
+                        'cur': {
+                            key: value
+                        }
+                    })
+                else:
+                    changes.append({
+                        'prev': {
+                            key: prev_obj[key]
+                        },
+                        'cur': {
+                            key: value
+                        }
+                    })
 
             get_changed_values(value, cur_obj[key], changes, changed_i)
 

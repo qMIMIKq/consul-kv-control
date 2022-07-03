@@ -5,7 +5,10 @@
         {% for key, value in d.prev_value.items() %}
             {#                            {% if d.mod_keys and key in d.mod_keys %}list-value__item--changed{% endif %}#}
             <li class="list-value__item">
-                {% if value is mapping %}
+                {% if not value is iterable and not value is mapping or value is string %}
+                    {{ key }}: {{ value }}
+
+                {% elif value is mapping and not value is iterable %}
                     {{ key }}:
 
                     <ul>
@@ -14,30 +17,26 @@
                         {% endfor %}
                     </ul>
 
-                {% else %}
-                    {% if value is iterable and not value is mapping %}
-                        {{ key }}:
-                        <ul>
-                            {% for i in range(value|length) %}
-                                {% if value[i] is mapping %}
-                                    {{ i }}: {
-                                    <ul>
-                                        {% for k, v in value[i].items() %}
-                                            <li class="list-value__item"> {{ k }}: {{ v }}</li>
-                                        {% endfor %}
-                                    </ul>
-                                    }
-                                    <br>
-                                {% else %}
-                                    <ul>
-                                        <li class="list-value__item">{{ i }}: {{ value[i] }}</li>
-                                    </ul>
-                                {% endif %}
-                            {% endfor %}
-                        </ul>
-                    {% elif not value is iterable and not value is mapping %}
-                        {{ key }}: {{ value }}
-                    {% endif %}
+                {% elif value is iterable and not value is mapping %}
+                    {{ key }}:
+                    <ul>
+                        {% for i in range(value|length) %}
+                            {% if value[i] is mapping %}
+                                {{ i }}: {
+                                <ul>
+                                    {% for k, v in value[i].items() %}
+                                        <li class="list-value__item">{{ k }}: {{ v }}</li>
+                                    {% endfor %}
+                                </ul>
+                                }
+                                <br>
+                            {% else %}
+                                <ul>
+                                    <li class="list-value__item">{{ i }}: {{ value[i] }}</li>
+                                </ul>
+                            {% endif %}
+                        {% endfor %}
+                    </ul>
                 {% endif %}
             </li>
         {% endfor %}

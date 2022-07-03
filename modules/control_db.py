@@ -4,7 +4,7 @@ from datetime import datetime
 from modules.get_data import get_data
 
 
-exclude_keys = ['char/test']
+exclude_keys = ['check/ignore']
 
 
 def init_table_kvs(db, DbName):

@@ -16,28 +16,26 @@
                             {% endfor %}
                         </ul>
 
-                    {% else %}
-                        {% if value is iterable and not value is mapping %}
-                            {{ key }}:
-                            <ul>
-                                {% for i in range(value|length) %}
-                                    {% if value[i] is mapping %}
-                                        {
-                                        <ul>
-                                            {% for k, v in value[i].items() %}
-                                                <li class="list-value__item">{{ k }}: {{ v }}</li>
-                                            {% endfor %}
-                                        </ul>
-                                        }
-                                        <br>
-                                    {% else %}
-                                        <ul>
-                                            <li class="list-value__item">{{ i }}: {{ value[i] }}</li>
-                                        </ul>
-                                    {% endif %}
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
+                    {% elif value is iterable and not value is mapping %}
+                        {{ key }}:
+                        <ul>
+                            {% for i in range(value|length) %}
+                                {% if value[i] is mapping %}
+                                    {
+                                    <ul>
+                                        {% for k, v in value[i].items() %}
+                                            <li class="list-value__item">{{ k }}: {{ v }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    }
+                                    <br>
+                                {% else %}
+                                    <ul>
+                                        <li class="list-value__item">{{ i }}: {{ value[i] }}</li>
+                                    </ul>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
                     {% endif %}
                 </li>
             {% endfor %}

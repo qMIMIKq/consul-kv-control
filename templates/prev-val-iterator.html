@@ -4,11 +4,11 @@
         {
         {% for key, value in d.prev_value.items() %}
             {#                            {% if d.mod_keys and key in d.mod_keys %}list-value__item--changed{% endif %}#}
-            <li class="list-value__item">
+            <li class="list-value__item list-value__item--outer">
                 {% if not value is iterable and not value is mapping or value is string %}
                     {{ key }}: {{ value }}
 
-                {% elif value is mapping and not value is iterable %}
+                {% elif value is mapping %}
                     {{ key }}:
 
                     <ul>

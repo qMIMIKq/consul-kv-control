@@ -1,15 +1,24 @@
-import requests, json, base64
+import json
+import consul
+
+
+c = consul.Consul()
 
 
 def get_data():
-    data = requests.get(
-        'http://127.0.0.1:8500/v1/kv?recurse'
-    ).json()
+    index, data = c.kv.get('', recurse=True)
 
+    dec_data = filter(lambda kv: kv['Key'] != 'exclude-keys', data)
     dec_data = list(map(lambda kv: {
         'path': kv['Key'],
         'mod_id': kv['ModifyIndex'],
-        'value': json.loads(base64.b64decode(kv['Value']).decode('utf-8'))
-    }, data))
+        'value': json.loads(kv['Value'].decode('utf-8'))
+    }, dec_data))
 
     return data, dec_data
+
+
+def get_exclude_keys():
+    index, data = c.kv.get('exclude-keys')
+
+    return data['Value'].decode('utf-8').split(' ')

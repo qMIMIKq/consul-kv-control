@@ -1,10 +1,11 @@
-import json
+import json, logging
 from datetime import datetime
 
-from modules.get_data import get_data
+from modules.get_data import get_data, get_exclude_keys
 
 
-exclude_keys = ['check/ignore']
+# куда то вынести - done
+exclude_keys = get_exclude_keys()
 
 
 def init_table_kvs(db, DbName):
@@ -32,7 +33,8 @@ def init_table_kvs(db, DbName):
 
                 db.session.commit()
             except:
-                print('Не получилось')
+                # выводить логи
+                pass
 
 
 changes_list = []
@@ -64,7 +66,6 @@ def control_kvs_updates(db, DbName):
                     if type(cur_val[key]) == dict or type(cur_val[key]) == list:
                         get_changed_values(prev_val[key], cur_val[key])
                         changes[key] = [item for item in changes_list]
-
                         changes_list.clear()
                     else:
                         changes[key] = {
@@ -107,14 +108,9 @@ def get_changed_values(prev_obj, cur_obj, changes=None, changed_i=None):
             get_changed_values(prev_obj[i], cur_obj[i], changes, i)
 
     elif type(cur_obj) == dict:
-        for change in changes:
-            for c_key, c_value in change.items():
-                print(f'{c_key}: {c_value}')
-
         for key, value in cur_obj.items():
             if json.dumps(value) != json.dumps(prev_obj[key]):
                 if changed_i is not None:
-
                     changes.append({
                         'index': changed_i,
                         'prev': {
@@ -124,6 +120,7 @@ def get_changed_values(prev_obj, cur_obj, changes=None, changed_i=None):
                             key: value
                         }
                     })
+
                 else:
                     changes.append({
                         'prev': {
